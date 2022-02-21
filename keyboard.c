@@ -15,14 +15,16 @@ unsigned char keyboardMap[128] = {
 };
 
 int enterClickNumber = 0;
-bool performedSum = false;
 
 int firstNumber[DIGIT];
 int secondNumber[DIGIT];
 int result[DIGIT + 1];
 
 int firstNumberSize = 0;
-int secondNUmberSize = 0;
+int secondNumberSize = 0;
+
+bool firstNumberNegative = false;
+bool secondNumberNegative = false;
 
 int counter = 0;
 
@@ -36,10 +38,17 @@ void keyboardHandler(){
         putch(keyboardMap[scancode]);
     } else {
         unsigned char symbol = keyboardMap[scancode];
-        if((symbol >= '0') && (symbol <= '9') && (counter < DIGIT)){
+        if(symbol == '-' && counter == 0){
+            if(enterClickNumber){
+                secondNumberNegative = true;
+            } else {
+                firstNumberNegative = true;
+            }
+            putch(symbol);
+        }else if((symbol >= '0') && (symbol <= '9') && (counter < DIGIT)){
             int number = symbol - '0';
             if(enterClickNumber){
-                secondNumber[secondNUmberSize++] = number;
+                secondNumber[secondNumberSize++] = number;
             } else {
                 firstNumber[firstNumberSize++] = number;
             }
@@ -53,7 +62,11 @@ void keyboardHandler(){
 
             if(enterClickNumber == 2){
                 puts("Suma je : ");
-                sum();
+                if((firstNumberNegative && !secondNumberNegative) || (!firstNumberNegative && secondNumberNegative)){
+                    sub();
+                } else {
+                    sum();
+                }
                 putch('\n');
             }
         }
@@ -74,7 +87,7 @@ void setEnv(){
 
 void sum(){
     int first = firstNumberSize - 1;
-    int second = secondNUmberSize - 1;
+    int second = secondNumberSize - 1;
 
     int carriage = 0;
     int resultCounter = 0;
@@ -98,6 +111,86 @@ void sum(){
 
     if(carriage){
         result[resultCounter++] = carriage;
+    }
+
+    if(firstNumberNegative && secondNumberNegative){
+        putch('-');
+    }
+    for(int i = resultCounter - 1; i >= 0; --i){
+        putch((unsigned char)('0' + result[i]));
+    }
+}
+
+int isGreater(){
+    if(firstNumberSize > secondNumberSize){
+        return 1;
+    } else if(secondNumberSize > firstNumberSize){
+        return 2;
+    } else {
+        for(int i = firstNumberSize - 1; i >= 0; --i){
+            if(firstNumber[i] > secondNumber[i]){
+                return 1;
+            } else if(secondNumber[i] > firstNumber[i]){
+                return 2;
+            }
+        }
+        return 0;
+    }
+}
+
+void sub(){
+    int greater = isGreater();
+    if(greater == 0){
+        putch('0');
+        return;
+    }
+
+    int first = firstNumberSize - 1;
+    int second = secondNumberSize - 1;
+
+    int carriage = 0;
+    int resultCounter = 0;
+
+    while(first >= 0 && second >= 0){
+        int currentSub;
+        if(greater == 2){
+            currentSub = secondNumber[second--] - firstNumber[first--] - carriage;
+        } else {
+            currentSub = firstNumber[first--] - secondNumber[second--] - carriage;
+        }
+        if(currentSub < 0){
+            currentSub += 10;
+            carriage = 1;
+        } else {
+            carriage = 0;
+        }
+        result[resultCounter++] = currentSub;
+    }
+
+    while(first >= 0){
+        int currentSub = firstNumber[first--] - carriage;
+        if(currentSub < 0){
+            currentSub += 10;
+            carriage = 1;
+        } else {
+            carriage = 0;
+        }
+        result[resultCounter++] = currentSub;
+    }
+
+    while(second >= 0){
+        int currentSub = secondNumber[second--] - carriage;
+        if(currentSub < 0){
+            currentSub += 10;
+            carriage = 1;
+        } else {
+            carriage = 0;
+        }
+        result[resultCounter++] = currentSub;
+    }
+
+    if((greater == 1 && firstNumberNegative) || (greater == 2 && secondNumberNegative)){
+        putch('-');
     }
 
     for(int i = resultCounter - 1; i >= 0; --i){

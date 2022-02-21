@@ -22,5 +22,6 @@ extern void timerHandler();
 extern void keyboardHandler();
 extern void setEnv();
 extern void sum();
+extern void sub();
 
 #endif
