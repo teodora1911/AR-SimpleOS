@@ -127,7 +127,7 @@ int isGreater(){
     } else if(secondNumberSize > firstNumberSize){
         return 2;
     } else {
-        for(int i = firstNumberSize - 1; i >= 0; --i){
+        for(int i = 0; i < firstNumberSize; ++i){
             if(firstNumber[i] > secondNumber[i]){
                 return 1;
             } else if(secondNumber[i] > firstNumber[i]){
