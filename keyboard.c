@@ -82,7 +82,7 @@ void setEnv(){
     }
     result[DIGIT] = -1;
 
-    puts("Unesite dva prirodna broja za racunanje sume!\n");
+    puts("Unesite dva cijela broja za racunanje sume!\n");
 }
 
 void sum(){
