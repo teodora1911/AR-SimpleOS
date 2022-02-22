@@ -113,16 +113,20 @@ void isrHandler(){
 }
 
 void irqRemap(){
+    // inicijalizacija command
     outb(0x20, 0x11);
     io_wait();
     outb(0xA0, 0x11);
     io_wait();
+    // postavljamo offset
     outb(0x21, 0x20);
     io_wait();
     outb(0xA1, 0x28);
     io_wait();
+    // ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
     outb(0x21, 0x04);
     io_wait();
+    // ICW3: tell Slave PIC its cascade identity (0000 0010)
     outb(0xA1, 0x02);
     io_wait();
     outb(0x21, 0x01);

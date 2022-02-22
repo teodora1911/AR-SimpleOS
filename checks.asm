@@ -59,14 +59,14 @@ checkCPUID:
 checkLongMode:
     ; sada kada je cpuid dostupan, provjeravamo da li mozemo da koristimo long mode
     ; mozemo to detektovati samo ako koristimo "extended functions of cpuid" (> 0x80000000)
-    mov eax, 0x80000000   ; set the A-register to 0x80000000
-    cpuid                 ; CPU indetification
-    cmp eax, 0x80000001   ; compare the A-register with 0x80000001
-    jb .noLongMode      ; it is less --> there is no long mode
+    mov eax, 0x80000000   ; implicit argument for cpuid
+    cpuid                 ; get highest supported argument
+    cmp eax, 0x80000001   ; it needs to be at least 0x80000001
+    jb .noLongMode        ; it is less --> there is no long mode
 
     ; sad kada je "extended function" dostupna mozemo da je koristimo da bismo detektovali long mode
-    mov eax, 0x80000001   ; set the A-register to 0x80000001
-    cpuid                 ; CPU identification
+    mov eax, 0x80000001   ; argument for extended processor info
+    cpuid                 ; returns various bits in ecx and edx
     test edx, 1 << 29     ; test if the LM-bit, which is bit 29, is set in the D-register
     jz .noLongMode        ; they are not --> there is no long mode
     ret

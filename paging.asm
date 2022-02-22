@@ -10,6 +10,7 @@ enablePaging:
     mov eax, pageMapLevel4
     mov cr3, eax
 
+    ; long mode is an extension of Physical Address Extension (PAE), so we need to enable PAE first
     ; enable PAE-flag in cr4 (Physical Address Extension)
     mov eax, cr4
     or eax, 1 << 5
