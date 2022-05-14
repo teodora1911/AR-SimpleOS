@@ -20,9 +20,9 @@ checkMultiboot:
     jmp error
 
 checkCPUID:
-    ; trying to reverse ID bit in EFLAGS register (21. bit)
+    ; pokusavamo da okrenemo ID bit u EFLAGS registru (21. bit)
+    ; ako uspijemo to da uradimo, onda je cpuid podrzan
     ; https://studfile.net/preview/1583052/page:17/
-    ; if we are able to do so then cpuid is available
 
     ; stavljamo EFLAGS u EAX preko stack-a
     pushfd 
