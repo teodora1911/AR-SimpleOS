@@ -2,7 +2,7 @@ bits 32
 
 global runChecks
 
-BOOTLOADER_MAGIC equ 0x36D76289 ; prema specifikaciji
+BOOTLOADER_MAGIC equ 0x36D76289 ; according to specification
 
 section .text
 runChecks:
@@ -20,9 +20,9 @@ checkMultiboot:
     jmp error
 
 checkCPUID:
-    ; pokusavamo da okrenemo ID bit u EFLAGS registru (21. bit)
+    ; trying to reverse ID bit in EFLAGS register (21. bit)
     ; https://studfile.net/preview/1583052/page:17/
-    ; ako smo u mogucnosti da to uradimo onda je cpuid dostupan
+    ; if we are able to do so then cpuid is available
 
     ; stavljamo EFLAGS u EAX preko stack-a
     pushfd 
